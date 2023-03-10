@@ -1,15 +1,12 @@
 import React, {useState} from "react";
-import Counter from "./components/Counter";
-import ClassCounter from "./components/ClassCounter";
+import './styles/App.css'
+import PostItem from "./components/PostItem";
 function App() {
-  const [value, setValue] = useState('Текст в инпуте');
 
   return (
     <div className="App">
-        <Counter />
-        <ClassCounter />
-        <h1>{value}</h1>
-        <input type='text' onChange={event => setValue(event.target.value)} value={value}/>
+        <PostItem post={{id: 1, title: 'JavaScript', body: 'Description'}}/>
+
     </div>
   );
 }
