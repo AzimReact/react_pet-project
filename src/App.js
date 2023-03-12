@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import './styles/App.css'
 import PostList from "./components/PostList";
 import MyButton from "./components/UI/button/MyButton";
@@ -10,12 +10,32 @@ function App() {
         {id: 3, title: 'JavaScript 3', body: 'Description'}
     ])
 
+    const [title, setTitle] = useState('')
+
+    const bodyInputRef = useRef();
+    const addNewPost = (event) => {
+        event.preventDefault()
+        console.log(title)
+        console.log(bodyInputRef.current.value)
+    }
+
+
   return (
     <div className="App">
         <form >
-            <MyInput type='text' placeholder='Название поста'/>
-            <MyInput type='text' placeholder='Описание поста'/>
-            <MyButton>Создать пост</MyButton>
+            {/* Управляемый Компонент*/}
+            <MyInput
+                type='text'
+                placeholder='Название поста'
+                value={title}
+                onChange={e => setTitle(e.target.value)}/>
+
+            {/* Неправляемый Компонент*/}
+            <MyInput
+                ref={bodyInputRef}
+                type='text'
+                placeholder='Описание поста'/>
+            <MyButton onClick={addNewPost}>Создать пост</MyButton>
         </form>
       <PostList posts={posts} title='Posts about JS'/>
     </div>
