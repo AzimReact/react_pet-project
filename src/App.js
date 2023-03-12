@@ -11,12 +11,19 @@ function App() {
     ])
 
     const [title, setTitle] = useState('')
+    const [body, setBody] = useState('')
 
-    const bodyInputRef = useRef();
-    const addNewPost = (event) => {
-        event.preventDefault()
-        console.log(title)
-        console.log(bodyInputRef.current.value)
+    const addNewPost = (e) => {
+        e.preventDefault();
+
+        const newPost = {
+            id: Date.now(),
+            title,
+            body
+        }
+        setPosts([...posts, newPost])
+        setTitle('')
+        setBody('')
     }
 
 
@@ -28,13 +35,16 @@ function App() {
                 type='text'
                 placeholder='Название поста'
                 value={title}
-                onChange={e => setTitle(e.target.value)}/>
+                onChange={e => setTitle(e.target.value)}
+            />
 
-            {/* Неправляемый Компонент*/}
             <MyInput
-                ref={bodyInputRef}
                 type='text'
-                placeholder='Описание поста'/>
+                placeholder='Описание поста'
+                value={body}
+                onChange={e => setBody(e.target.value)}
+            />
+
             <MyButton onClick={addNewPost}>Создать пост</MyButton>
         </form>
       <PostList posts={posts} title='Posts about JS'/>
