@@ -11,17 +11,16 @@ function App() {
         {id: 3, title: 'JavaScript 3', body: 'Description'}
     ])
 
-    const addNewPost = (e) => {
-        e.preventDefault();
-
-        setPosts([...posts, {...post, id: Date.now()}])
-        setPost({title: '', body: ''})
+    const createPost = (newPost) => {
+        setPosts([...posts, newPost])
     }
+
+
 
 
   return (
     <div className="App">
-        <PostForm />
+        <PostForm create={createPost}/>
         <PostList posts={posts} title='Posts about JS'/>
     </div>
   );

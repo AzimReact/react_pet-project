@@ -2,9 +2,18 @@ import React, {useState} from 'react';
 import MyInput from "./UI/input/MyInput";
 import MyButton from "./UI/button/MyButton";
 
-const PostForm = () => {
+const PostForm = ({create}) => {
     const [post, setPost] = useState({title: '', body: ''})
+    const addNewPost = (e) => {
+        e.preventDefault();
+        const newPost = {
+            ...post,
+            id: Date.now()
+        }
 
+        create(newPost)
+        setPost({title: '', body: ''})
+    }
     return (
         <form >
             {/* Управляемый Компонент*/}
