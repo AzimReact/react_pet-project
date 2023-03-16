@@ -4,28 +4,29 @@ import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/select/MySelect";
 import MyInput from "./components/UI/input/MyInput";
+import PostFilter from "./components/PostFilter";
 function App() {
     const [posts, setPosts] = useState([
         {id: 1, title: 'vaScript 1', body: 'Description'},
         {id: 2, title: 'JavaScript 2', body: 'escription'},
         {id: 3, title: 'avaScript 3', body: 'scription'}
     ])
-    const [selectedSort, setSelectedSort] = useState('')
-    const [searchQuery, setSearchQuery] = useState('')
+
+    const [filter, setFilter] = useState({sort: '', query: ''})
 
     const sortedPosts = useMemo(() => {
         console.log('Function sortedPosts worked one more time')
 
-        if (selectedSort) {
-            return [...posts].sort((a, b) => a[selectedSort].localeCompare(b[selectedSort]));
+        if (filter.sort) {
+            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
         }
         return posts;
-    }, [selectedSort, posts])
+    }, [filter.sort, posts])
 
     const sortedAndSearchedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(searchQuery))
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
 
-    }, [searchQuery, sortedPosts])
+    }, [filter.query, sortedPosts])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
@@ -35,29 +36,12 @@ function App() {
         setPosts(posts.filter(p => p.id !== post.id ))
     }
 
-    const sortPosts = (sort) => {
-        setSelectedSort(sort)
-    }
   return (
     <div className="App">
         <PostForm create={createPost}/>
         <hr style={{margin: '15px 0'}}/>
-        <div>
-            <MyInput value={searchQuery} onChange={e => setSearchQuery(e.target.value) } placeholder='Поиск...'/>
-            <MySelect
-                value={selectedSort}
-                onChange={sortPosts}
-                defaultValue='Сортировка'
-                options={[
-                    {value: 'title', name: 'По названию'},
-                    {value: 'body', name: 'По описанию'}
-                ]}
-            />
-        </div>
-        {sortedAndSearchedPosts.length
-            ? <PostList remove={removePost} posts={sortedAndSearchedPosts} title='Posts about JS'/>
-            : <h1 style={{textAlign: "center"}}>Posts not found.</h1>
-        }
+        <PostFilter filter={filter} setFilter={setFilter}/>
+        <PostList remove={removePost} posts={sortedAndSearchedPosts} title='Posts about JS'/>
     </div>
   );
 }
