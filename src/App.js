@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import './styles/App.css'
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
@@ -17,6 +17,10 @@ function App() {
         setPosts([...posts, newPost])
         setModal(false)
     }
+
+    useEffect(() => {
+        fetchPosts()
+    }, [])
 
     async function fetchPosts () {
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
