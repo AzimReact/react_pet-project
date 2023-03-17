@@ -8,13 +8,17 @@ import MyButton from "./components/UI/button/MyButton";
 import {usePosts} from "./hooks/usePosts";
 import PostService from "./API/PostService";
 import Loader from "./components/UI/Loader/Loader";
+import {useFetching} from "./hooks/useFetching";
 function App() {
     const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
     const [modal, setModal] = useState(false)
     const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
-    const [isPostLoading, setIsPostLoading] = useState(false)
+    const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+        const posts = await PostService.getAll()
+        setPosts(posts)
+    })
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
         setModal(false)
@@ -23,17 +27,6 @@ function App() {
     useEffect(() => {
         fetchPosts()
     }, [])
-
-    async function fetchPosts () {
-        setIsPostLoading(true)
-        setTimeout(async () => {
-            const posts = await PostService.getAll()
-            setPosts(posts)
-            setIsPostLoading(false)
-        }, 500)
-
-
-    }
 
     // Получаем пост из дочернего компонента
     const removePost = (post) => {
@@ -50,7 +43,11 @@ function App() {
 
         <hr style={{margin: '15px 0'}}/>
         <PostFilter filter={filter} setFilter={setFilter}/>
-        {isPostLoading
+        {postError &&
+            <h1>Произошла ошибка {postError}</h1>
+        }
+
+        {isPostsLoading
                ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50} }><Loader /></div>
                : <PostList remove={removePost} posts={sortedAndSearchedPosts} title='Posts about JS'/>
         }
