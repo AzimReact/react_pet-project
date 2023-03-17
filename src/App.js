@@ -1,34 +1,17 @@
-import React, {useMemo, useState} from "react";
+import React, {useState} from "react";
 import './styles/App.css'
 import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
 import MyButton from "./components/UI/button/MyButton";
+import {usePosts} from "./hooks/usePosts";
 function App() {
-    const [posts, setPosts] = useState([
-        {id: 1, title: 'vaScript 1', body: 'Description'},
-        {id: 2, title: 'JavaScript 2', body: 'escription'},
-        {id: 3, title: 'avaScript 3', body: 'scription'}
-    ])
-
-   const [modal, setModal] = useState('')
-
+    const [posts, setPosts] = useState([])
     const [filter, setFilter] = useState({sort: '', query: ''})
+    const [modal, setModal] = useState('')
+    const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query)
 
-    const sortedPosts = useMemo(() => {
-        console.log('Function sortedPosts worked one more time')
-
-        if (filter.sort) {
-            return [...posts].sort((a, b) => a[filter.sort].localeCompare(b[filter.sort]));
-        }
-        return posts;
-    }, [filter.sort, posts])
-
-    const sortedAndSearchedPosts = useMemo(() => {
-        return sortedPosts.filter(post => post.title.toLowerCase().includes(filter.query.toLowerCase()))
-
-    }, [filter.query, sortedPosts])
 
     const createPost = (newPost) => {
         setPosts([...posts, newPost])
